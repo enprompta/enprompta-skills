@@ -65,8 +65,19 @@ rather than copying by hand.
 
 ## Status
 
-⚠️ **Not yet run against real sample apps.** The content is derived from the SDK
-READMEs and verified against the SDK source, but the acceptance test — running
-the skill end-to-end on a Node ESM + OpenAI app and a Python + LangChain app and
-confirming a trace lands — has not been done. Do that before publishing to a
-registry; the ESM/entrypoint gotchas only surface on a real run.
+**Validated by real runs** (2026-07-12):
+
+- ✅ **Node ESM + OpenAI** — end to end. A real OpenAI call, patched via the
+  `modules` path, emits a complete OpenInference trace (provider, model,
+  input/output, prompt/completion token counts, latency). The ESM `modules`
+  gotcha is confirmed to matter and to be handled.
+- ✅ **Python + OpenAI** — `auto_instrument()` patches the client and posts to
+  the same `/api/ingest/traces` path (confirmed against the SDK source); provider
+  detection verified for `openai`, `anthropic`, and `google-generativeai`.
+- ✅ **Live in production** — a real tool-calling agent (Watt, on
+  gridmix.co.uk), instrumented with this flow, is ingesting traces.
+
+Not yet independently exercised here (still relying on the SDK docs, which are
+the source of truth): the **framework span-tree path**
+(`instrumentFrameworks` / `instrument_frameworks` for LangChain/LlamaIndex).
+Treat that path as documented-but-unverified until it gets its own run.

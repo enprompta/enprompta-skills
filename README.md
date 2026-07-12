@@ -22,11 +22,14 @@ Python.
 npx skills add enprompta/enprompta-skills --skill enprompta-instrumentation
 ```
 
-> ⚠️ **Beta.** The content is derived from the Enprompta SDK READMEs and
-> verified against the SDK source, but has **not yet been run end-to-end against
-> real sample apps**. Expect the happy paths to work; report anything that
-> doesn't. The acceptance test (Node ESM + OpenAI, Python + LangChain, confirm a
-> trace lands) is the gate before this leaves beta.
+> ✅ **Validated** (2026-07-12). Verified by real runs: **Node ESM + OpenAI**
+> end-to-end (a real call, patched via `modules`, emits a complete OpenInference
+> trace); **Python + OpenAI** `auto_instrument()` (patch + `/api/ingest/traces`
+> path confirmed, provider detection incl. `google-generativeai`); and **live in
+> production** — gridmix.co.uk's tool-calling agent is ingesting traces with this
+> flow. The framework span-tree path (`instrumentFrameworks` /
+> `instrument_frameworks` for LangChain) is documented but not yet independently
+> run here — treat it as such.
 
 ### `enprompta`
 Triage traces that already exist and close the loop to a passing regression
