@@ -1,10 +1,13 @@
 # Enprompta Agent Skill
 
-An [Agent Skill](https://docs.claude.com/en/docs/claude-code/skills) that teaches
-coding agents (Claude Code, Cursor, and any client that supports the open Skills
-standard) how to triage traces and run evaluations in Enprompta — via the
-`@enprompta/cli` (preferred when the agent has shell access) or the Enprompta
-MCP server.
+An [Agent Skill](https://agentskills.io) — the open standard stewarded by the
+Agentic AI Foundation — that teaches coding agents how to triage traces and run
+evaluations in Enprompta, via the `@enprompta/cli` (preferred when the agent has
+shell access) or the Enprompta MCP server.
+
+It's plain-markdown instructions with **no agent-specific code**, so it runs on
+any standard-compatible agent — Claude Code, Cursor, Codex, GitHub Copilot,
+Gemini CLI, OpenCode, Goose, and others.
 
 It is **instructions, not capabilities** — the actual capabilities come from the
 CLI (`enprompta trace|eval|api …`) or the MCP server (`list_traces`,
@@ -21,10 +24,21 @@ window.
 
 ## Install
 
-**Claude Code** — copy into your skills directory (project or user scope):
+One command, from the public skills registry — works with any Skills-compatible
+agent (Claude Code, Cursor, Codex, …):
 
 ```
-cp -r skills/enprompta ~/.claude/skills/
+npx skills add enprompta/enprompta-skills --skill enprompta
+```
+
+Working from a local clone of this repo instead? Use the bundled installer (or
+copy the folder into your agent's skills directory — see
+[agentskills.io](https://agentskills.io)):
+
+```
+skills/install.sh enprompta            # this repo
+skills/install.sh enprompta --user     # all your projects (~/.claude/skills)
+skills/install.sh enprompta --dir <path>   # any other agent's skills dir
 ```
 
 Then give the agent a way to reach Enprompta. Either install the CLI:

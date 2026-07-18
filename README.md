@@ -1,9 +1,9 @@
 # Enprompta Agent Skills
 
-Official [Agent Skills](https://docs.claude.com/en/docs/claude-code/skills) for
+Official [Agent Skills](https://agentskills.io) for
 [Enprompta](https://enprompta.com) — the prompt registry, observability, and
-evaluation platform for AI apps. Install them into Claude Code, Cursor, or any
-client that supports the open Skills standard with
+evaluation platform for AI apps. Install them into Claude Code, Cursor, Codex,
+GitHub Copilot, or any client that supports the open Agent Skills standard with
 [`npx skills`](https://github.com/vercel-labs/skills).
 
 Together they cover the loop end to end: **instrument an app → get traces →

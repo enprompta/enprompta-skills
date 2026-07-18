@@ -7,6 +7,17 @@ description: >-
   says "instrument my app", "send traces to Enprompta", "I see no traces yet",
   or is starting from an app that isn't reporting to Enprompta. For triaging
   traces that already exist, use the `enprompta` skill instead.
+version: 1.0.0
+# Plain-markdown instructions with no agent-specific code — runs on any client
+# that supports the open Agent Skills standard (agentskills.io).
+compatible_agents:
+  - claude-code
+  - cursor
+  - codex
+  - copilot
+  - gemini-cli
+  - opencode
+  - goose
 ---
 
 # Enprompta: instrument an app for tracing

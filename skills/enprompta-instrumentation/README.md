@@ -1,10 +1,13 @@
 # Enprompta Instrumentation Agent Skill
 
-An [Agent Skill](https://docs.claude.com/en/docs/claude-code/skills) that teaches
-coding agents (Claude Code, Cursor, and any client that supports the open Skills
-standard) to **instrument an application for Enprompta tracing** — detect the
-stack, install the SDK, wire auto-instrumentation at the entrypoint, and verify
-a trace actually lands.
+An [Agent Skill](https://agentskills.io) — the open standard stewarded by the
+Agentic AI Foundation — that teaches coding agents to **instrument an
+application for Enprompta tracing**: detect the stack, install the SDK, wire
+auto-instrumentation at the entrypoint, and verify a trace actually lands.
+
+It's plain-markdown instructions with **no agent-specific code**, so it runs on
+any standard-compatible agent — Claude Code, Cursor, Codex, GitHub Copilot,
+Gemini CLI, OpenCode, Goose, and others.
 
 It is **instructions, not capabilities** — the capabilities come from the
 Enprompta SDKs (`@enprompta/sdk`, `enprompta`). The skill encodes the decision
@@ -28,11 +31,25 @@ build regression datasets, run evals.
 
 ## Install
 
-**Claude Code** — copy into your skills directory (project or user scope):
+One command, from the public skills registry — works with any Skills-compatible
+agent (Claude Code, Cursor, Codex, …):
 
 ```
-cp -r skills/enprompta-instrumentation ~/.claude/skills/
+npx skills add enprompta/enprompta-skills --skill enprompta-instrumentation
 ```
+
+Working from a local clone of this repo instead? Use the bundled installer
+(defaults to project scope, `./.claude/skills/`):
+
+```
+skills/install.sh enprompta-instrumentation            # this repo
+skills/install.sh enprompta-instrumentation --user     # all your projects (~/.claude/skills)
+skills/install.sh enprompta-instrumentation --dir <path>   # any other agent's skills dir
+```
+
+Or copy the folder by hand into the skills location your agent uses — see
+[agentskills.io](https://agentskills.io) for each agent (Claude Code:
+`~/.claude/skills/` or `.claude/skills/`).
 
 The user then sets their key (the skill never handles the value):
 

@@ -5,6 +5,17 @@ description: >-
   score and annotate them, turn failures into regression datasets, and run
   evaluations. Use when the user mentions Enprompta, LLM traces, eval failures,
   flaky prompts, regressions, or "why did the model do X" on observed traffic.
+version: 1.0.0
+# Plain-markdown instructions with no agent-specific code — runs on any client
+# that supports the open Agent Skills standard (agentskills.io).
+compatible_agents:
+  - claude-code
+  - cursor
+  - codex
+  - copilot
+  - gemini-cli
+  - opencode
+  - goose
 ---
 
 # Enprompta: trace triage & evaluation
