@@ -1,0 +1,97 @@
+name: CI
+
+# The repo had no CI, so nothing checked that install.sh runs, that it actually
+# places the files, or that each SKILL.md still parses as the Agent Skills
+# standard expects. All three are cheap to verify and all three have broken
+# before.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Lint the install script
+        run: shellcheck --shell=sh skills/install.sh
+
+      - name: install.sh --help stays inside its comment block
+        run: |
+          set -eu
+          help=$(skills/install.sh --help)
+          printf '%s\n' "$help"
+          # A hardcoded line range used to leak shell code into the help text.
+          if printf '%s\n' "$help" | grep -qE '^(set -eu|SRC_DIR=)'; then
+            echo "::error::--help is printing shell code, not just the header"
+            exit 1
+          fi
+
+      - name: install.sh places both skills, and replaces on reinstall
+        run: |
+          set -eu
+          work=$(mktemp -d)
+          cd "$work"
+          "$GITHUB_WORKSPACE/skills/install.sh" all --project
+          test -f .claude/skills/enprompta-instrumentation/SKILL.md
+          test -f .claude/skills/enprompta/SKILL.md
+
+          # A file deleted upstream must not survive a reinstall.
+          touch .claude/skills/enprompta/reference/RETIRED.md
+          "$GITHUB_WORKSPACE/skills/install.sh" enprompta --project
+          if [ -e .claude/skills/enprompta/reference/RETIRED.md ]; then
+            echo "::error::reinstall merged instead of replacing"
+            exit 1
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install the YAML parser used by the frontmatter check
+        run: pip install --quiet pyyaml
+
+      - name: Every SKILL.md has valid frontmatter
+        run: |
+          python - <<'PY'
+          import pathlib, sys
+          import yaml
+
+          failures = []
+          skills = sorted(pathlib.Path("skills").glob("*/SKILL.md"))
+          if not skills:
+              sys.exit("no SKILL.md files found")
+
+          for path in skills:
+              text = path.read_text(encoding="utf-8")
+              if not text.startswith("---"):
+                  failures.append(f"{path}: no frontmatter block")
+                  continue
+              raw = text.split("---", 2)[1]
+              try:
+                  meta = yaml.safe_load(raw) or {}
+              except yaml.YAMLError as exc:
+                  failures.append(f"{path}: frontmatter is not valid YAML ({exc})")
+                  continue
+              for key in ("name", "description", "version"):
+                  if not meta.get(key):
+                      failures.append(f"{path}: missing '{key}'")
+              if meta.get("name") and meta["name"] != path.parent.name:
+                  failures.append(f"{path}: name '{meta['name']}' != folder '{path.parent.name}'")
+              print(f"ok  {path}  ({meta.get('name')} v{meta.get('version')})")
+
+          if failures:
+              print()
+              for f in failures:
+                  print("FAIL", f)
+              sys.exit(1)
+          PY

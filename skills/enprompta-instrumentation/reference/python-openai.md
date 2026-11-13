@@ -13,6 +13,10 @@ pip install enprompta
 
 ## Wire (at startup, before the first LLM call)
 
+> The model ID in these snippets is illustrative — use whatever model your app
+> already calls. The SDK traces the call either way, and provider model IDs go
+> stale faster than this page does.
+
 ```python
 import enprompta
 

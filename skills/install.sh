@@ -21,6 +21,9 @@
 #   skills/install.sh all --dir ~/.cursor/skills        # target another agent
 set -eu
 
+# shellcheck disable=SC1007  # `CDPATH= cd` deliberately clears CDPATH for this
+# one command, so a user's CDPATH can't redirect us somewhere else. It is not a
+# mistyped assignment.
 SRC_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 
 skill="all"
@@ -32,7 +35,9 @@ while [ $# -gt 0 ]; do
     --user)    dest="$HOME/.claude/skills" ;;
     --project) dest=".claude/skills" ;;
     --dir)     shift; dest="${1:?--dir needs a path}" ;;
-    -h|--help) sed -n '2,25p' "$0"; exit 0 ;;
+    # Print the header comment, stopping at the first line that isn't one.
+    # A hardcoded line range drifts the moment the header changes length.
+    -h|--help) awk 'NR>1 && /^#/ {sub(/^# ?/, ""); print; next} NR>1 {exit}' "$0"; exit 0 ;;
     *) echo "Unknown argument: $1" >&2; exit 2 ;;
   esac
   shift
@@ -44,6 +49,10 @@ install_one() {
     echo "No such skill: $name" >&2; exit 1
   fi
   mkdir -p "$dest"
+  # Replace, don't merge. `cp -R` into an existing directory leaves behind
+  # files that were deleted upstream, so a reference/ page we retired would
+  # keep being read by every agent that had already installed it.
+  rm -rf "${dest:?}/${name:?}"
   cp -R "$SRC_DIR/$name" "$dest/"
   echo "Installed '$name' -> $dest/$name"
 }

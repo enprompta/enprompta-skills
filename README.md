@@ -41,6 +41,20 @@ server.
 npx skills add enprompta/enprompta-skills --skill enprompta
 ```
 
+## Install without `npx`
+
+`skills/install.sh` copies a skill folder into any agent's skills directory —
+useful when `npx` isn't available, or when your agent keeps its skills
+somewhere other than `.claude/skills`. It replaces an existing install rather
+than merging into it, so a reference page retired upstream doesn't linger.
+
+```bash
+skills/install.sh                                   # both skills, ./.claude/skills
+skills/install.sh enprompta-instrumentation --user  # ~/.claude/skills
+skills/install.sh all --dir ~/.cursor/skills        # any other agent
+skills/install.sh --help
+```
+
 ## Usage
 
 1. Install a skill (above).

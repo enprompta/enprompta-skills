@@ -12,6 +12,10 @@ npm install @enprompta/sdk
 
 ## Wire (top of the entrypoint, before the provider is imported)
 
+> The model ID in these snippets is illustrative — use whatever model your app
+> already calls. The SDK traces the call either way, and provider model IDs go
+> stale faster than this page does.
+
 ```typescript
 import { init } from '@enprompta/sdk'
 import OpenAI from 'openai'            // or: import Anthropic from '@anthropic-ai/sdk'
