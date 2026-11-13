@@ -88,6 +88,10 @@ README wins and this skill is stale.
   (CommonJS may omit `modules` and rely on auto-detection.)
 - **Idempotency:** if init/auto-instrument is already present, don't add a
   second one — adjust the existing call instead.
+- **If the app handles real user text, offer PII redaction.** It is off by
+  default, and what you are about to start capturing is prompts and responses.
+  See [`reference/pii-redaction.md`](reference/pii-redaction.md). Offer it;
+  don't switch it on unasked.
 
 ### 4. Add framework instrumentation (only if a framework was detected)
 
@@ -139,6 +143,8 @@ tracked file. Never paste a real key into the repo, a commit, or chat.
   edit it; don't stack a second.
 - **If the provider or framework is genuinely ambiguous, ask** — one question
   beats instrumenting the wrong client.
+- **Capturing user data is a decision, not a detail.** Raise PII redaction
+  before the first trace lands, not after the user finds an address in one.
 - **Base URL:** default is `https://enprompta.com`. Only override (`baseUrl` /
   `base_url`) for self-hosted/preview deployments — and that's a value the user
   gives you, not one you invent.
