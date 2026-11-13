@@ -57,6 +57,9 @@ jobs:
         with:
           python-version: '3.13'
 
+      - name: Install the YAML parser used by the frontmatter check
+        run: pip install --quiet pyyaml
+
       - name: Every SKILL.md has valid frontmatter
         run: |
           python - <<'PY'
