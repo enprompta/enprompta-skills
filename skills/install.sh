@@ -21,6 +21,9 @@
 #   skills/install.sh all --dir ~/.cursor/skills        # target another agent
 set -eu
 
+# shellcheck disable=SC1007  # `CDPATH= cd` deliberately clears CDPATH for this
+# one command, so a user's CDPATH can't redirect us somewhere else. It is not a
+# mistyped assignment.
 SRC_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 
 skill="all"
@@ -49,7 +52,7 @@ install_one() {
   # Replace, don't merge. `cp -R` into an existing directory leaves behind
   # files that were deleted upstream, so a reference/ page we retired would
   # keep being read by every agent that had already installed it.
-  rm -rf "$dest/$name"
+  rm -rf "${dest:?}/${name:?}"
   cp -R "$SRC_DIR/$name" "$dest/"
   echo "Installed '$name' -> $dest/$name"
 }
